@@ -1,3 +1,5 @@
+
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import ytdl from "@distube/ytdl-core";
 import { NextRequest } from "next/server";
 
