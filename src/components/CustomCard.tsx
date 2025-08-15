@@ -22,7 +22,7 @@ import {
   FormMessage,
 } from "@/components/ui/form"
 import { Alert, AlertDescription, AlertTitle } from "./ui/alert"
-import { AlertCircleIcon, CheckCircle2Icon, PopcornIcon } from "lucide-react"
+import { AlertCircleIcon, CheckCircle2Icon, Loader, PopcornIcon } from "lucide-react"
 import { useRouter } from "next/navigation"
 
 
@@ -100,6 +100,14 @@ export default function CustomCard() : React.ReactNode{
                           <Alert>
                               <CheckCircle2Icon className="text-green-500"/>
                               <AlertTitle className="text-green-500">Success! Your changes have been saved</AlertTitle>
+                            </Alert>
+                          )
+                        }
+                        {
+                          form.formState.isLoading && (
+                          <Alert>
+                              <Loader />
+                              <AlertTitle className="">Loading ...</AlertTitle>
                             </Alert>
                           )
                         }
