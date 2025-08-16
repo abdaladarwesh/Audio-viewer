@@ -21,6 +21,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     filter: "audioonly",
     quality: "highestaudio",
     highWaterMark: 1 << 25,
+    requestOptions: {
+    headers: {
+      cookie: process.env.YOUTUBE_COOKIE ?? "",
+    },
+  },
   });
 
   stream.pipe(res);
