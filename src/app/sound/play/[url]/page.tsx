@@ -18,7 +18,7 @@ export default function Play() : React.ReactNode{
         <div className="w-screen h-screen flex justify-center items-center">
             <audio
                 controls
-                src={`/api/sound?url=${(url)}`}
+                src={`/api/stream?url=${(url)}`}
             />
         </div>
     );
