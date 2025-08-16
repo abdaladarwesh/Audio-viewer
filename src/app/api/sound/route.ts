@@ -44,11 +44,13 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import ytdl from "@distube/ytdl-core";
 import { NextRequest } from "next/server";
+import { Readable } from "stream";
 
-export const runtime = "nodejs"; // ✅ force Node.js serverless, not Edge
+// Force Node.js runtime on Vercel (not Edge)
+export const runtime = "nodejs";
 
-// Convert Node stream (ytdl) → Web stream
-function nodeToWeb(nodeStream: NodeJS.ReadableStream) {
+// 🔑 Convert Node stream -> Web stream
+function nodeToWeb(nodeStream: Readable) {
   return new ReadableStream({
     start(controller) {
       nodeStream.on("data", (chunk) => controller.enqueue(chunk));
@@ -56,10 +58,11 @@ function nodeToWeb(nodeStream: NodeJS.ReadableStream) {
       nodeStream.on("error", (err) => controller.error(err));
     },
     cancel() {
-      nodeStream.unpipe();
+      nodeStream.destroy(); // ✅ works now
     },
   });
 }
+
 
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
@@ -76,7 +79,7 @@ export async function GET(req: NextRequest) {
     const nodeStream = ytdl(url, {
       filter: "audioonly",
       quality: "highestaudio",
-      highWaterMark: 1 << 25, // helps with stutter
+      highWaterMark: 1 << 25,
     });
 
     const webStream = nodeToWeb(nodeStream);
@@ -84,6 +87,7 @@ export async function GET(req: NextRequest) {
     return new Response(webStream, {
       headers: {
         "Content-Type": "audio/mpeg",
+        // no Transfer-Encoding here, Vercel handles it
       },
     });
   } catch (err) {
