@@ -11,7 +11,7 @@ interface params{
 export default function Play() : React.ReactNode{
     
     const Params = useParams<params> ()
-    const { url } : {url : string} = Params; 
+    const { url } : any = Params; 
 
 
     return(
